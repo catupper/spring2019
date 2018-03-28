@@ -215,3 +215,204 @@ class BF:
 もし余力があったら、BrainF**kで入力された数字の和を出力するプログラムなどを作ってみよう。とても難しいことがわかる。
 
 
+## 構文解析
+HQ9+もBrainF**kも大して難しい構文解析は行わなかった。人間が読みやすいプログラミング言語は、多少高度な構文解析を行わなければコード解釈ができない。
+構文解析の練習として以下の機能を持つ対話型シェルを作ってみよう。
+
+- 四則演算が処理できる。ただし左から順に計算する優先順位である。括弧には対応していない
+- 変数に対応している。
+- 数式を1行入力してエンターを押すと、それを計算し、成功すれば結果を出力し、失敗すればエラーを吐く
+- `x = 3`というふうに`(変数名) = (値)` とすると変数を宣言したり、値を設定したりできる。
+
+ここで、どのような入力が構文として正しいいのかを示すために、BNFという表記を導入する。これから実装する言語の正当な1行の命令に対応するBNFは以下のようになる。
+
+```
+<command> ::= <substitute> | <formula>
+
+<substitute> ::= <variable> '=' <formula>
+
+<formula> ::= 　　<number> '+' <formula>
+	      | <number> '*' <formula>
+	      | <number> '-' <formula>
+	      | <number> '/' <formula>
+	      | <number>
+
+<number> ::= <constant> | <variable>
+
+<variable> ::= <alphabet> | <alphabet> <variable>
+
+<alphabet> ::= 'a' | 'b' | .. | 'z'
+
+<constant> ::= <digit> | <digit> <constant>
+
+<digit> ::= '0' | '1' | '2' | .. | '9'
+
+```
+
+BNFの記法は `::=`の左のパターンが右に書いたパターンとマッチするということを定義している。
+
+たとえば最後の一行は、<digit>は'0'や'1'などの一文字の数字にマッチすることを表している。
+最後から二行目は<number>は<digit>単体もしくは<digit>のあとに<number>が来るものとマッチすることを表している。
+これはつまり<digit>が1つ以上並んだものが<number>であることを表している。
+
+上のBNF記法で書かれた文法の仕様に則って、まずは構文解析器を作ってみよう。
+
+### 構文解析の実装
+まずは文字列が与えられた時に、先頭の整数だけ取り出して、残りと分離する関数を実装してみよう。
+
+```python:read_constant.py
+DIGITS = "0123456789"
+def read_constant(string):
+    i = 0
+    while i < len(string) and string[i] in DIGITS:
+        i += 1
+    return int(string[:i]), string[i:]
+```
+一文字目から順番に見ていって、数字ではなくなるところまで全部取って、整数として読み込みというコードである。
+
+次に`<number>`を処理する関数を実装しよう。`read_number(string)`とすると'string'の先頭から、整数もしくは変数を読み取って、残りと分離する関数である。
+
+```python:read_number.py
+def error(message):
+    print(message)
+    exit(0)
+
+def read_number(string):
+    string = string.strip()
+    if string == "":error("syntax_error")
+    
+    if string[0] in DIGITS:
+        return read_constant(string)
+
+    if string[0] in ALPHABETS:
+        return read_variable(string)
+
+    error("syntax_error")
+```
+
+この次は`<formula>`を処理する関数を実装しよう。`read_formula(string)`とすると`string`を式として解釈してその計算結果を返すようにしよう。
+
+```python:read_formula.py
+env = {}
+def read_formula(string):
+    string = string.strip()
+    num, rest = read_number(string)
+    if type(num) == str:
+        if num not in env:error("no such variable {}".format(num))
+        num = env[num]
+    if rest == "":
+        return num
+    rest = rest.strip()
+
+    if rest[0] == '+':
+        return num + read_formula(rest[1:])
+    if rest[0] == '*':
+        #自分で実装する
+        pass
+    if rest[0] == '-':
+        #自分で実装する
+        pass
+    if rest[0] == '/':
+        #自分で実装する
+        pass
+    error("syntax_error")
+```
+
+ここで,`env`は連想配列で、将来的には変数名をキーとして、その変数の値を格納するものである。envはenvironment(環境)の略で、現在の変数の状況を管理しているものと考えてもらって良い。
+
+最後に、commandを実装すれば変数を使わず代入もせず足し算しかできないインタプリタが完成するはずだ。
+
+```python:read_command.py
+def read_command(string):
+    if '=' in string:
+        var = read_substitute(string)
+        print("set {}".format(var))
+    else:
+        print(read_formula(string))
+
+
+while True:
+    read_command(input())
+```
+ここでは'='が含まれていれば代入分で、そうでなければただの式だと判定している。
+
+ここまでのものと、これから実装しなければならないものをまとめると以下のようになる。
+
+```python:syntax.py
+DIGITS = "0123456789"
+ALPHABETS = "abcdefghijklmnopqrstuvwxyz"
+env = {}
+
+def error(message):
+    print(message)
+    exit(0)
+
+
+def read_number(string):
+    string = string.strip()
+    if string == "":error("syntax_error")
+    
+    if string[0] in DIGITS:
+        return read_constant(string)
+
+    if string[0] in ALPHABETS:
+        return read_variable(string)
+
+    error("syntax_error")
+
+def read_constant(string):
+    i = 0
+    while i < len(string) and string[i] in DIGITS:
+        i += 1
+    return int(string[:i]), string[i:]
+
+
+def read_variable(string):
+    #自分で実装する
+    pass
+
+def read_formula(string):
+    string = string.strip()
+    num, rest = read_number(string)
+    if type(num) == str:
+        if num not in env:error("no such variable {}".format(num))
+        num = env[num]
+    if rest == "":
+        return num
+    rest = rest.strip()
+
+    if rest[0] == '+':
+        return num + read_formula(rest[1:])
+    if rest[0] == '*':
+        #自分で実装する
+        pass
+    if rest[0] == '-':
+        #自分で実装する
+        pass
+    if rest[0] == '/':
+        #自分で実装する
+        pass
+    error("syntax_error")
+
+def read_substitute(string):
+    string.strip()
+    var, rest = read_variable(string)
+    rest = rest.strip()
+    if rest[0] != '=':error("syntax_error")
+    env[var] = read_formula(rest[1:])
+    return var
+
+def read_command(string):
+    if '=' in string:
+        var = read_substitute(string)
+        print("set {}".format(var))
+    else:
+        print(read_formula(string))
+
+
+while True:
+    read_command(input())
+```
+
+このままでは足し算しかできないので、`#自分で実装する`と書いてある場所を埋めて、変数や他の演算子に対応しているようにしよう。
+
