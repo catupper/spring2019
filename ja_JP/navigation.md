@@ -3,7 +3,7 @@
   -- Do NOT remove the leading `#` character.
   -->
 
-# K-kai Hackathon Spring 2018
+# K-kai Hackathon Spring 2019
 
 
 <!--
@@ -12,7 +12,7 @@
   -->
 
 [gimmick:theme](spacelab)
-
+[gimmick: math]()
 
 <!--
   -- Navigation
