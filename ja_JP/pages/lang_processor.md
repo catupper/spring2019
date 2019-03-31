@@ -91,7 +91,7 @@ def command_h():
 def command_plus():
     global accumulator
     accumulator += 1
-    
+
 def command_9():
     #自分で実装する
     pass
@@ -99,6 +99,16 @@ def command_9():
 def command_q(sourcecode):
     #自分で実装する
     pass
+```
+これらを実装し終わったあとは、以下のコードを最後に追加すれば、実行できるようになる。
+
+```python:main.py
+def main():
+    sourcecode = read_code()
+    process(sourcecode)
+
+if __name__ == "__main__":
+    main()
 ```
 
 
@@ -172,17 +182,17 @@ class BF:
     def left(self):
 		#自分で実装する
 		pass
-    
+
     def plus(self):
         self.memory[self.pointer] += 1
-        
+
     def minus(self):
 		#自分で実装する
 		pass
-    
+
     def dot(self):
         sys.stdout.write(chr(self.memory[self.pointer]))        
-    
+
     def comma(self):
 		#自分で実装する
 		pass
@@ -199,7 +209,7 @@ class BF:
         if bracket != 0:
             print("bracket is broken")
             exit(0)
-            
+
     def cket(self):
 		#自分で実装する
 		pass
@@ -280,7 +290,7 @@ def error(message):
 def read_number(string):
     string = string.strip()
     if string == "":error("syntax_error")
-    
+
     if string[0] in DIGITS:
         return read_constant(string)
 
@@ -351,7 +361,7 @@ def error(message):
 def read_number(string):
     string = string.strip()
     if string == "":error("syntax_error")
-    
+
     if string[0] in DIGITS:
         return read_constant(string)
 
@@ -415,4 +425,3 @@ while True:
 ```
 
 このままでは足し算しかできないので、`#自分で実装する`と書いてある場所を埋めて、変数や他の演算子に対応しているようにしよう。
-
