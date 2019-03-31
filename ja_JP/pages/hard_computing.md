@@ -107,7 +107,7 @@ def distance(route, d):
 
 def next_permutation(l):
     n = len(l)
-    
+
     i = n-2
     while i >= 0 and l[i] >= l[i+1]:
         i -= 1
@@ -151,7 +151,7 @@ def solve(n, d):
 def main():
     n,d = read()
     solve(n,d)
-    
+
 main()
 ```
 
@@ -164,7 +164,7 @@ main()
 ```
 4
 0 1 1 2
-1 0 2 3 
+1 0 2 3
 1 2 0 4
 2 3 4 0
 ```
@@ -209,12 +209,12 @@ def solve(n, d):
         res = min(res, dp[(1<<n)-1][i] + d[i][0])
 
     print("dist", res)
-            
+
 
 def main():
     n,d = read()
     solve(n,d)
-    
+
 main()
 ```
 
@@ -299,7 +299,7 @@ def brute_force(n, W, vs, ws):
 def main():
     n, w, vs, ws = read()
     brute_force(n, w, vs, ws)
-    
+
 main()
 ```
 
@@ -334,7 +334,7 @@ def dynamic_programming(n, W, vs, ws):
 def main():
     n, w, vs, ws = read()
     dynamic_programming(n, w, vs, ws)
-    
+
 main()
 ```
 
@@ -390,7 +390,7 @@ def climb(n, W, vs, ws, trial = 100000):
             knapsack = tk[:]
             snacks += go_back
             del snacks[cand]
-            
+
     print("value", vsum)
     print("snacks", sorted(knapsack))
 
@@ -399,7 +399,7 @@ def main():
     climb(n, w, vs, ws)
 
 main()
-    
+
 ```
 山登り法は、最適解の到着するまで動かし続ければ良いのだが、最適解じゃないところにとどまってしまったり、そもそも最適解かどうかの判定が難しかったりするので、通常は何回ループを回すかを指定して動かすことが多い。
 そのため、最適解が得られる保証は無いが、プログラムが走る時間を自由に調節することができる。
@@ -543,7 +543,7 @@ def solve(n, d):
 def main():
     n,d = read()
     solve(n,d)
-    
+
 main()
 ```
 ####演習問題
@@ -551,3 +551,7 @@ main()
 
 ####演習問題
 2次元平面上のN点の最短巡回路をもとめて可視化してみよ。javascriptやPILやgnuplotを使っても良いが、Processingが書けるならば、Processingのコードを出力するプログラムを作るのが一番楽だろう。
+
+###大きめな入出力例
+https://github.com/catupper/spring2019/tree/gh-pages/ja_JP/sourcecode
+このページに大きめな入出力例がある。試してみよう。
