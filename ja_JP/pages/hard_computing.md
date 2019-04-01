@@ -200,7 +200,7 @@ def solve(n, d):
             if (v & (1<<i))== 0:
                 continue
             for j in range(n):
-                if i == j or (v & (1 << j)) == 1:
+                if i == j or (v & (1 << j)) == 0:
                     continue
                 dp[v][i] = min(dp[v][i], dp[v - (1<<i)][j] + d[j][i])
 
