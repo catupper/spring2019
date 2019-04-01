@@ -38,7 +38,7 @@ void solveAll(Int N, Int W, vector<Int> v, vector<Int> w){
   }cout << endl;
 }
 
-
+//動的計画法
 void solveDP(Int N, Int W, vector<Int> v, vector<Int> w){
   vector< Int > dp(W+1, 0);
   for(Int i = 0;i < N;i++){
@@ -49,6 +49,7 @@ void solveDP(Int N, Int W, vector<Int> v, vector<Int> w){
   cout << dp[W] << endl;
 }
 
+
 int main(){
   Int N, W;
   cin >> N >> W;
@@ -57,6 +58,6 @@ int main(){
     cin >> v[i] >> w[i];
   }
 
-  solveAll(N, W, v, w);
+  //solveAll(N, W, v, w);
   solveDP(N, W, v, w);
 }
