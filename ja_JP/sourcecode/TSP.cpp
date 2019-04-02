@@ -21,12 +21,12 @@ void view_vector(vector<Int> v){
 }
 
 //全探索
-void solveAll(Int n, vector<vector<Int> > d){
+void solveAll(Int n, vector<vector<double> > d){
   vector<Int> route, min_route;
-  Int min_dist = 1LL<<60;
+  double min_dist = 1LL<<60;
   for(Int i = 1;i < n;i++)route.push_back(i);
   do{
-    Int tmp = d[0][route[0]];
+    double tmp = d[0][route[0]];
     for(Int i = 0;i+1 < route.size();i++){
       tmp += d[route[i]][route[i+1]];
     }
@@ -41,8 +41,8 @@ void solveAll(Int n, vector<vector<Int> > d){
 }
 
 //動的計画法
-void solveDP(Int n, vector<vector<Int> > d){
-  vector< vector<Int> > dp(1<<n, vector<Int>(n, INF));
+void solveDP(Int n, vector<vector<double> > d){
+  vector< vector<double> > dp(1<<n, vector<double>(n, INF));
   vector< vector<Int> > before(1<<n, vector<Int>(n, 0));
   dp[1][0] = 0;
   for(Int i = 1;i < (1<<n);i++){
@@ -58,10 +58,10 @@ void solveDP(Int n, vector<vector<Int> > d){
       }
     }
   }
-  Int ans = INF;
+  double ans = INF;
   Int last = -1;
   for(Int i = 1;i < n;i++){
-    Int tmp = dp[(1<<n)-1][i] + d[i][0];
+    double tmp = dp[(1<<n)-1][i] + d[i][0];
     if(ans > tmp){
       ans = tmp;
       last = i;
@@ -82,14 +82,14 @@ void solveDP(Int n, vector<vector<Int> > d){
 }
 
 //焼きなまし法
-void solveAnealing(Int n, vector<vector<Int> > d){
+void solveAnealing(Int n, vector<vector<double> > d){
   vector<Int> min_route, route;
-  Int tmp = 0;
+  double tmp = 0;
   for(Int i = 0;i < n;i++){
     route.push_back(i);
     tmp += d[i][(i+1)%n];
   }
-  Int ans = tmp;
+  double ans = tmp;
   min_route = route;
 
   Int LOOP = 10000000, K = 10;
@@ -98,7 +98,7 @@ void solveAnealing(Int n, vector<vector<Int> > d){
     Int b = rand() % n;
     if(a > b)swap(a, b);
     if((b+1)%n == a || a == b)continue;
-    Int tmp2 =tmp;
+    double tmp2 =tmp;
     tmp2 += -d[route[(a+n-1)%n]][route[a]] + d[route[(a+n-1)%n]][route[b]];
     tmp2 += -d[route[b]][route[(b+1)%n]] + d[route[a]][route[(b+1)%n]];
     if(tmp2 < tmp || rand() % (LOOP * K) < 10){
@@ -119,7 +119,7 @@ int main(){
   srand((unsigned) time(NULL));
   Int n;
   cin >> n;
-  vector<vector<Int> > d(n, vector<Int>(n));
+  vector<vector<double> > d(n, vector<double>(n));
   for(Int i = 0;i < n;i++){
     for(Int j = 0;j < n;j++){
       cin >> d[i][j];
