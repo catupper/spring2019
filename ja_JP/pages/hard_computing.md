@@ -567,3 +567,8 @@ main()
 ###大きめな入出力例
 https://github.com/catupper/spring2019/tree/gh-pages/ja_JP/sourcecode
 このページに大きめな入出力例がある。試してみよう。
+
+### TSPのVisualizer
+https://catupper.github.io/tsp_visualizer/tsp_visualizer
+入力の番号を選んでSetInputを押すと点が描画される。
+ルートは空白区切りでめぐる順番を入れればよい。最後に出発地点を追加する必要はない。
