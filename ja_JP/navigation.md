@@ -12,7 +12,8 @@
   -->
 
 [gimmick:theme](spacelab)
-[gimmick: math]()
+
+[gimmick:math]()
 
 <!--
   -- Navigation
